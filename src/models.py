@@ -48,7 +48,7 @@ def get_fake_quotation_items() -> QuotationItems:
     return QuotationItems(
         items=[
             QuotationItem(
-                sku="620001",
+                sku=None,
                 name="Bürotür mit Stahl-U-Zarge (0,76 x 2,135 m)",
                 text="Hörmann Stahlfutterzarge VarioFix für Mauerwerk oder TRB<br/>- Drückerhöhe 1050 mm<br/>- Meterrissmarkierung<br/>- Maulweitenkante 15 mm<br/>- Stahlblech verzinkt, Materialstärke 1,5 mm<br/>- Hörmann BaseLine HPL Türblatt<br/>- Türgewicht ca. 18,1 kg/m²<br/>- Türstärke ca. 40,7 mm",
                 quantity=1,

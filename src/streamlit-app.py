@@ -7,7 +7,7 @@ import streamlit as st
 from dotenv import load_dotenv
 from lib import get_pdf_content, generate_xml_export
 from pipelines import PipelineV2
-from models import QuotationItems
+from models import QuotationItem, QuotationItems
 from streamlit_pdf_viewer import pdf_viewer
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 
@@ -18,16 +18,17 @@ OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY")
 
 @st.dialog("Analyzing PDF")
 def analyze_pdf() -> None:
+    sleep_time: float = 1.0
     progress_bar = st.progress(0, text="Loading PDF. Please be patient...")
-    time.sleep(2)
+    time.sleep(sleep_time)
 
     progress_bar.progress(0.10, "📄 Extracting text from PDF...")
-    time.sleep(1)
+    time.sleep(sleep_time)
     pdf_content: str = get_pdf_content(st.session_state["pdf_file_path"])
 
     page_count: int = len(pdf_content.split("\n\n"))
     progress_bar.progress(0.25, f"📜 Extracted {page_count} pages from PDF")
-    time.sleep(2)
+    time.sleep(sleep_time)
 
     quotation_items: QuotationItems = PipelineV2.extract_quotation_items_from_pdf(
         pdf_content=pdf_content,
@@ -38,13 +39,14 @@ def analyze_pdf() -> None:
     progress_bar.progress(
         0.99, f"📦 Found {len(quotation_items.items)} quotation items"
     )
-    time.sleep(2)
+    time.sleep(sleep_time)
 
     progress_bar.progress(1.0, "✅ PDF analysis completed")
-    time.sleep(2)
+    time.sleep(sleep_time)
 
     st.session_state["quotation_items"] = quotation_items
     st.session_state["analyzed"] = True
+    st.session_state["show_analysis_success_toast"] = True
 
 
 def render_quotation_items(quotation_items: QuotationItems) -> None:
@@ -55,7 +57,15 @@ def render_quotation_items(quotation_items: QuotationItems) -> None:
             ),
             expanded=True,
         ):
-            st.markdown(f"#### {quotation_item.name}")
+            col0, col1 = st.columns([9, 1])
+            with col0:
+                st.markdown(f"#### {quotation_item.name}")
+            with col1:
+                edit_button = st.button(
+                    label="", key=f"edit-{i}", type="secondary", icon="✏️"
+                )
+                if edit_button:
+                    render_edit_quotation_item(i, quotation_item)
 
             is_high_confidence: bool = quotation_item.is_door_product_confidence >= 0.75
             is_medium_confidence: bool = (
@@ -85,6 +95,59 @@ def render_quotation_items(quotation_items: QuotationItems) -> None:
             st.markdown(quotation_item.text, unsafe_allow_html=True)
 
 
+@st.dialog("Edit Quotation Item")
+def render_edit_quotation_item(index: int, quotation_item: QuotationItem) -> None:
+    edited_sku = st.text_input(
+        label="SKU:",
+        value=quotation_item.sku,
+        key=f"edit-sku-{index}",
+    )
+    edited_commission = st.text_input(
+        label="Commission:",
+        value=quotation_item.commission,
+        key=f"edit-commission-{index}",
+    )
+    col0, col1 = st.columns([1, 1])
+    with col0:
+        edited_quantity = st.number_input(
+            label="Quantity:",
+            value=quotation_item.quantity,
+            key=f"edit-quantity-{index}",
+        )
+    with col1:
+        edited_quantity_unit = st.text_input(
+            label="Quantity Unit:",
+            value=quotation_item.quantity_unit,
+            key=f"edit-quantity-unit-{index}",
+        )
+    edited_name = st.text_input(
+        label="Name:",
+        value=quotation_item.name,
+        key=f"edit-name-{index}",
+    )
+    edited_text = st.text_area(
+        label="Text",
+        value=quotation_item.text,
+        height=200,
+        key=f"edit-text-{index}",
+    )
+    if st.button(
+        label="Save",
+        type="primary",
+        key=f"save-{index}",
+        icon="💾",
+    ):
+        quotation_item.sku = edited_sku
+        quotation_item.name = edited_name
+        quotation_item.commission = edited_commission
+        quotation_item.text = edited_text
+        quotation_item.quantity = edited_quantity
+        quotation_item.quantity_unit = edited_quantity_unit
+        st.session_state["quotation_items"].items[index] = quotation_item
+        st.session_state["show_quotation_item_update_toast"] = True
+        st.rerun()
+
+
 def main():
     st.set_page_config(
         page_title="ByteCook",
@@ -92,6 +155,14 @@ def main():
         layout="wide",
     )
     st.title("👨‍🍳 ByteCook")
+
+    if st.session_state.get("show_quotation_item_update_toast", False):
+        st.toast("Quotation item updated successfully!", icon="✅")
+        st.session_state["show_quotation_item_update_toast"] = False
+
+    if st.session_state.get("show_analysis_success_toast", False):
+        st.toast("PDF analysis completed successfully!", icon="✅")
+        st.session_state["show_analysis_success_toast"] = False
 
     # PDF upload
     if not st.session_state.get("pdf", None):

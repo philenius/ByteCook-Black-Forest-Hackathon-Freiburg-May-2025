@@ -4,7 +4,7 @@
 
 **👥 Team Name:** ByteCook
 
-**🧑‍🤝‍🧑 Team Members:** Robert, Sebastian, Janik, Christof, Philipp
+**🧑‍🤝‍🧑 Team Members:** Robert, Sebastian, Jannik, Christof, Philipp
 
 🎉 Welcome! This repository contains the submission of team _ByteCook_. This project was crafted with passion during the **[Black Forest Hackathon in Freiburg in May 2025](https://www.blackforesthackathon.de/may/)**. The app is built using **Streamlit** 🖥️ and provides an intuitive interface for users to explore ByteCook's features.
 
