@@ -177,8 +177,9 @@ def main():
             st.session_state["customer_id"] = customer_id
 
             pdf_upload: UploadedFile | None = st.file_uploader(
-                label="Please upload your service specification document (PDF):",
+                label="Service specification document (PDF):",
                 type=["pdf"],
+                accept_multiple_files=False,
             )
 
             analyze_button = st.button(
