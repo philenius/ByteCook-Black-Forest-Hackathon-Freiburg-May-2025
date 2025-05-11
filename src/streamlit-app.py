@@ -87,11 +87,11 @@ def render_quotation_items(quotation_items: QuotationItems) -> None:
 
 def main():
     st.set_page_config(
-        page_title="BytesCook",
+        page_title="ByteCook",
         page_icon="👨‍🍳",
         layout="wide",
     )
-    st.title("👨‍🍳 BytesCook")
+    st.title("👨‍🍳 ByteCook")
 
     # PDF upload
     if not st.session_state.get("pdf", None):
@@ -132,6 +132,9 @@ def main():
 
     with quotation_items_column:
         with st.container(border=True, height=740):
+            if not st.session_state.get("analyzed", False):
+                st.rerun()
+
             quotation_items: QuotationItems = st.session_state["quotation_items"]
 
             st.markdown(
