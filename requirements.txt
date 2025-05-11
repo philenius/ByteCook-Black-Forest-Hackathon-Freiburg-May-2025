@@ -1,0 +1,9 @@
+langchain
+langchain-community
+lxml
+openai
+pdfplumber
+pydantic
+python-dotenv
+streamlit
+streamlit-pdf-viewer
