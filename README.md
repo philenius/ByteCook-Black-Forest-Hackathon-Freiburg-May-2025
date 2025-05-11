@@ -1,5 +1,7 @@
 # 🍳 ByteCook - Black Forest Hackathon, Freiburg, May 2025
 
+> 🌐 **Experience our app live at [bytecook.philenius.de/](https://bytecook.philenius.de/)!** 🚀
+
 **📄 Challenge:** [Challenge 2 - KOCH - Service Specification Document Transformer](https://www.blackforesthackathon.de/challenges-data-decoded/)
 
 **👥 Team Name:** ByteCook
