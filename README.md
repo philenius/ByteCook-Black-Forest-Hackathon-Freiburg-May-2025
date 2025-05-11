@@ -14,9 +14,9 @@ Our Streamlit app directly addresses the challenge of transforming complex Servi
 
 1. **PDF Upload:** Users can upload a Service Specification Document (PDF) through the app's intuitive interface.
 2. **AI-Powered Analysis:** Using advanced Large Language Models (LLMs) via OpenRouter, the app analyzes the uploaded document to extract relevant sections.
-3. **Structured Quotation Items:** The extracted content is automatically classified into KOCH's products, accessories, and services, and then structured into editable Quotation Items.
+3. **Structured Quotation Items:** Leveraging the capabilities of advanced LLMs, the extracted content is automatically categorized into KOCH's products, accessories, and services through prompt engineering. This content is then organized into editable Quotation Items for seamless user interaction.
 4. **Side-by-Side View:** The app displays the structured Quotation Items alongside the original PDF for easy comparison and validation.
-5. **User Interaction:** Users can select, deselect, and edit the extracted items to ensure accuracy and completeness.
+5. **User Interaction:** Users can edit the extracted items to ensure accuracy and completeness.
 6. **ERP Integration:** Once finalized, the structured Quotation Items can be exported as a clean XML file, ready for seamless ERP system integration.
 
 This solution combines the power of AI with a user-friendly interface, enabling non-technical users to process complex documents with ease and precision.
