@@ -23,7 +23,7 @@ def get_pdf_content(pdf_path: Path) -> str:
 
 def generate_xml_export(
     quotation_items: QuotationItems,
-    customer_id: int = 102736,
+    customer_id: str = "102736",
     commission: str = "Cerdia Leitwarte",
     type: str = "A",
     shipping_condition_id: int = 2,

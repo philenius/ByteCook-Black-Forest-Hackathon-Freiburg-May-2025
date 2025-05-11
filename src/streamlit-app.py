@@ -166,24 +166,38 @@ def main():
 
     # PDF upload
     if not st.session_state.get("pdf", None):
-        pdf_upload: UploadedFile | None = st.file_uploader(
-            label="Please upload your service specification document (PDF)",
-            type=["pdf"],
-            label_visibility="collapsed",
-        )
-        if pdf_upload:
-            st.session_state.pdf = pdf_upload
-            upload_path = Path(Path(__file__).parents[1] / "uploads")
-            upload_path.mkdir(parents=True, exist_ok=True)
-            pdf_file_path = Path(upload_path / pdf_upload.name).resolve()
-            pdf_file_path.write_bytes(pdf_upload.getvalue())
-            st.session_state["pdf_uploaded"] = True
-            st.session_state["pdf_file_path"] = pdf_file_path
+        col0 = st.columns([1, 1, 1])[1]
+        with col0:
+            customer_id = st.text_input(
+                label="Customer ID:",
+                placeholder="Customer ID",
+            )
+            st.session_state["customer_id"] = customer_id
 
-            analyze_pdf()
+            pdf_upload: UploadedFile | None = st.file_uploader(
+                label="Please upload your service specification document (PDF):",
+                type=["pdf"],
+            )
 
-            # Closes the dialog
-            st.rerun()
+            analyze_button = st.button(
+                label="Analyze PDF",
+                type="primary",
+                icon="🔍",
+            )
+
+            if customer_id and pdf_upload and analyze_button:
+                st.session_state.pdf = pdf_upload
+                upload_path = Path(Path(__file__).parents[1] / "uploads")
+                upload_path.mkdir(parents=True, exist_ok=True)
+                pdf_file_path = Path(upload_path / pdf_upload.name).resolve()
+                pdf_file_path.write_bytes(pdf_upload.getvalue())
+                st.session_state["pdf_uploaded"] = True
+                st.session_state["pdf_file_path"] = pdf_file_path
+
+                analyze_pdf()
+
+                # Closes the dialog
+                st.rerun()
 
         return
 
@@ -233,7 +247,10 @@ def main():
             )
             st.download_button(
                 label="Export as XML",
-                data=generate_xml_export(quotation_items=quotation_items),
+                data=generate_xml_export(
+                    quotation_items=quotation_items,
+                    customer_id=st.session_state["customer_id"],
+                ),
                 file_name=xml_file_name,
                 mime="application/xml",
                 type="primary",
