@@ -154,7 +154,9 @@ def main():
         page_icon="👨‍🍳",
         layout="wide",
     )
-    st.title("👨‍🍳 ByteCook")
+    st.markdown(
+        "<h1 style='text-align: center'>👨‍🍳 ByteCook</h1>", unsafe_allow_html=True
+    )
 
     if st.session_state.get("show_quotation_item_update_toast", False):
         st.toast("Quotation item updated successfully!", icon="✅")
